@@ -1,4 +1,5 @@
 ﻿using HotelFlow.Domain.Entities;
+using HotelFlow.Domain.Exceptions;
 
 namespace HotelFlow
 {
@@ -6,7 +7,7 @@ namespace HotelFlow
     {
         public static void Main(string[] args)
         {
-           
+            
         }
     }
 }

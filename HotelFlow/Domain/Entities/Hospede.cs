@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using HotelFlow.Domain.Exceptions;
 
 namespace HotelFlow.Domain.Entities
 {
@@ -16,19 +17,16 @@ namespace HotelFlow.Domain.Entities
             ValidarNome(nome);
             ValidarDocumento(documento);
             ValidarEmail(email);
-            ValidarTelefone(telefone);
 
             Id = Guid.NewGuid();
             Nome = nome;
             Documento = documento;
             Email = email;
-            Telefone = telefone;
+            Telefone = NormalizarEValidarTelefone(telefone);
         }
 
         public static Hospede Registrar(string nome, string documento, string email, string telefone)
         {
-            telefone = Regex.Replace(telefone, @"\D", "");
-
             return new Hospede(nome, documento, email, telefone);
         }
 
@@ -36,35 +34,47 @@ namespace HotelFlow.Domain.Entities
         {
             ValidarNome(nome);
             ValidarEmail(email);
-            ValidarTelefone(telefone);
 
             Nome = nome;
-            Telefone = Regex.Replace(telefone, @"\D", "");
+            Telefone = NormalizarEValidarTelefone(telefone);
             Email = email;
+        }
+
+        private string NormalizarEValidarTelefone(string telefone)
+        {
+            telefone = telefone != null ? RemoverMascaraTelefone(telefone) : "";
+            ValidarTelefone(telefone);
+
+            return telefone;
         }
 
         private void ValidarNome(string nome)
         {
             if (string.IsNullOrWhiteSpace(nome))
-                throw new ArgumentException("Digite um valor válido para nome");
+                throw new HospedeException("Nome inválido");
         }
 
         private void ValidarDocumento(string documento)
         {
             if (string.IsNullOrWhiteSpace(documento))
-                throw new ArgumentException("Digite um valor válido para documento");
+                throw new HospedeException("Documento inválido");
         }
 
         private void ValidarEmail(string email)
         {
             if (string.IsNullOrWhiteSpace(email) || !Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-                throw new ArgumentException("Digite um valor válido para email");
+                throw new HospedeException("Email inválido");
         }
 
         private void ValidarTelefone(string telefone)
         {
-            if (string.IsNullOrWhiteSpace(telefone) || (telefone.Length < 10 && telefone.Length > 11))
-                throw new ArgumentException("Digite um valor válido para telefone");
+            if (string.IsNullOrWhiteSpace(telefone) || (telefone.Length < 10 || telefone.Length > 11))
+                throw new HospedeException("Telefone inválido");
+        }
+
+        private string RemoverMascaraTelefone(string telefone)
+        {
+            return Regex.Replace(telefone, @"\D", "");
         }
     }
 }
