@@ -7,4 +7,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Application\Services\" />
+    <Folder Include="Domain\Enums\" />
+    <Folder Include="Domain\Exceptions\" />
+    <Folder Include="Infrastructure\Repositories\" />
+    <Folder Include="Presentation\Menus\" />
+  </ItemGroup>
+
 </Project>
