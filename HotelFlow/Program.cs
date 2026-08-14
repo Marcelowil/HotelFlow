@@ -1,4 +1,5 @@
 ﻿using HotelFlow.Domain.Entities;
+using HotelFlow.Domain.Enums;
 using HotelFlow.Domain.Exceptions;
 
 namespace HotelFlow
