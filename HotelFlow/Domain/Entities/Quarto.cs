@@ -48,7 +48,7 @@ namespace HotelFlow.Domain.Entities
             Status = StatusQuarto.Disponivel;
         }
 
-        public void OcuparQuarto()
+        public void Ocupar()
         {
             if (Status != StatusQuarto.Disponivel)
                 throw new QuartoException($"Não é possível ocupar um quarto {Status.Descricao().ToLower()}");
