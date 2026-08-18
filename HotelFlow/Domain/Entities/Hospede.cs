@@ -34,9 +34,10 @@ namespace HotelFlow.Domain.Entities
         {
             ValidarNome(nome);
             ValidarEmail(email);
+            telefone = NormalizarEValidarTelefone(telefone);
 
             Nome = nome;
-            Telefone = NormalizarEValidarTelefone(telefone);
+            Telefone = telefone;
             Email = email;
         }
 
