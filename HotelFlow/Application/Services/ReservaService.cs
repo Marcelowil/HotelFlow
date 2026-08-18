@@ -60,6 +60,15 @@ namespace HotelFlow.Application.Services
             return reserva;
         }
 
+        public Reserva ConcluirReserva(Guid id)
+        {
+            Reserva reserva = BuscarReservaPorId(id);
+
+            reserva.Concluir();
+
+            return reserva;
+        }
+
         private Reserva BuscarReservaPorId(Guid id)
         {
             return reservas.FirstOrDefault(reserva => reserva.Id.Equals(id))

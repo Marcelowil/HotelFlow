@@ -61,6 +61,14 @@ namespace HotelFlow.Domain.Entities
             Status = StatusReserva.Cancelada;
         }
 
+        public void Concluir()
+        {
+            if(Status != StatusReserva.Confirmada)
+                throw new ReservaException($"Não é possível concluir uma reserva {Status.Descricao().ToLower()}.");
+
+            Status = StatusReserva.Concluida;
+        }
+
         private void ValidarHospede(Hospede hospede)
         {
             if (hospede == null)
