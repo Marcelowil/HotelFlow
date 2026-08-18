@@ -45,6 +45,14 @@ namespace HotelFlow.Domain.Entities
             return decimal.Multiply(QuantidadeDiarias(), ValorDiaria);
         }
 
+        public void Cancelar()
+        {
+            if (Status == StatusReserva.Cancelada || Status == StatusReserva.Concluida)
+                throw new ReservaException($"A reserva já está {Status.Descricao().ToLower()}.");
+            
+            Status = StatusReserva.Cancelada;
+        }
+
         private void ValidarHospede(Hospede hospede)
         {
             if (hospede == null)

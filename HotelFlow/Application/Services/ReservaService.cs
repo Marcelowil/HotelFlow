@@ -41,5 +41,15 @@ namespace HotelFlow.Application.Services
         {
             return reservas;
         }
+
+        public Reserva CancelarReserva(Guid id)
+        {
+            Reserva reserva = reservas.FirstOrDefault(reserva => reserva.Id.Equals(id)) 
+                ?? throw new ReservaException($"Reserva com ID {id} não encontrada");
+
+            reserva.Cancelar();
+
+            return reserva;
+        }
     }
 }
