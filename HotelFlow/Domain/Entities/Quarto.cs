@@ -32,6 +32,30 @@ namespace HotelFlow.Domain.Entities
             return new Quarto(numero, categoria, capacidade, valorDiaria, StatusQuarto.Disponivel);
         }
 
+        public void EntrarEmManutenção()
+        {
+            if (Status != StatusQuarto.Disponivel)
+                throw new QuartoException($"Não é possível colocar o quarto em manutenção no status atual.");
+
+            Status = StatusQuarto.EmManutencao;
+        }
+
+        public void FinalizarManutencao()
+        {
+            if (Status != StatusQuarto.EmManutencao)
+                throw new QuartoException($"Não é possível finalizar manutenção de um quarto {Status.Descricao().ToLower()}.");
+
+            Status = StatusQuarto.Disponivel;
+        }
+
+        public void OcuparQuarto()
+        {
+            if (Status != StatusQuarto.Disponivel)
+                throw new QuartoException($"Não é possível ocupar um quarto {Status.Descricao().ToLower()}");
+
+            Status = StatusQuarto.Ocupado;
+        }
+
         private void ValidarNumero(int numero)
         {
             if (numero <= 0)
