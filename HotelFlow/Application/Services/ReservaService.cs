@@ -36,5 +36,10 @@ namespace HotelFlow.Application.Services
 
             return reserva;
         }
+
+        public IReadOnlyList<Reserva> ObterReservas()
+        {
+            return reservas;
+        }
     }
 }
