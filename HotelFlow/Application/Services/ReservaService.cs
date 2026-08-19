@@ -42,6 +42,17 @@ namespace HotelFlow.Application.Services
             return reservas;
         }
 
+        public Reserva RealizarPagamento(Guid id, decimal valor, DateTime dataPagamento, FormaPagamento formaPagamento)
+        {
+            Reserva reserva = BuscarReservaPorId(id);
+
+            Pagamento pagamento = Pagamento.Registrar(valor, dataPagamento, formaPagamento);
+
+            reserva.RegistrarPagamento(pagamento);
+
+            return reserva;
+        }
+
         public IReadOnlyList<Pagamento> ConsultarPagamentos(Guid id)
         {
             Reserva reserva = BuscarReservaPorId(id);
