@@ -12,6 +12,7 @@ namespace HotelFlow.Domain.Entities
         public DateTime DataSaida { get; private set; }
         public decimal ValorDiaria { get; private set; }
         public StatusReserva Status { get; private set; }
+        private List<Pagamento> pagamentos = new List<Pagamento>();
 
         private Reserva(Hospede hospede, Quarto quarto, DateTime dataEntrada, DateTime dataSaida, StatusReserva status)
         {
@@ -67,6 +68,24 @@ namespace HotelFlow.Domain.Entities
                 throw new ReservaException($"Não é possível concluir uma reserva {Status.Descricao().ToLower()}.");
 
             Status = StatusReserva.Concluida;
+        }
+
+        public void RegistrarPagamento(Pagamento pagamento)
+        {
+            if (pagamento.Valor > PagamentoPendente())
+                throw new PagamentoException("Valor de pagamento maior que o valor pendente");
+
+            pagamentos.Add(pagamento);
+        }
+
+        public decimal PagamentoPendente()
+        {
+            return ValorTotal() - ValorPago();
+        }
+
+        public decimal ValorPago()
+        {
+            return pagamentos.Sum(pagamento => pagamento.Valor);
         }
 
         private void ValidarHospede(Hospede hospede)
