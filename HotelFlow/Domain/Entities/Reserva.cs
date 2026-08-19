@@ -88,6 +88,11 @@ namespace HotelFlow.Domain.Entities
             return pagamentos.Sum(pagamento => pagamento.Valor);
         }
 
+        public IReadOnlyList<Pagamento> ObterPagamentos()
+        {
+            return pagamentos;
+        }
+
         private void ValidarHospede(Hospede hospede)
         {
             if (hospede == null)

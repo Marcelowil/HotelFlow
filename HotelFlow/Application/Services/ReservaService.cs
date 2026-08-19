@@ -42,6 +42,13 @@ namespace HotelFlow.Application.Services
             return reservas;
         }
 
+        public IReadOnlyList<Pagamento> ConsultarPagamentos(Guid id)
+        {
+            Reserva reserva = BuscarReservaPorId(id);
+
+            return reserva.ObterPagamentos();
+        }
+
         public Reserva ConfirmarReserva(Guid id)
         {
             Reserva reserva = BuscarReservaPorId(id);
