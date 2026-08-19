@@ -42,6 +42,11 @@ namespace HotelFlow.Application.Services
             return reservas;
         }
 
+        public IReadOnlyList<Reserva> ObterReservasPorStatus(StatusReserva status)
+        {
+            return reservas.Where(reserva => reserva.Status == status).ToList();
+        }
+
         public Reserva RealizarPagamento(Guid id, decimal valor, DateTime dataPagamento, FormaPagamento formaPagamento)
         {
             Reserva reserva = BuscarReservaPorId(id);
