@@ -92,9 +92,22 @@ namespace HotelFlow.Application.Services
             Reserva reserva = BuscarReservaPorId(id);
 
             if (reserva.Status != StatusReserva.Confirmada)
-                throw new ReservaException($"Não é possível fazer check-in em uma reserva com status {reserva.Status.Descricao().ToLower()}");
+                throw new ReservaException($"Não é possível fazer check-in em uma reserva com status {reserva.Status.Descricao().ToLower()}.");
 
             reserva.Quarto.Ocupar();
+
+            return reserva;
+        }
+
+        public Reserva RealizarCheckOut(Guid id)
+        {
+            Reserva reserva = BuscarReservaPorId(id);
+
+            if (reserva.Status != StatusReserva.Confirmada)
+                throw new ReservaException($"Não é possível fazer check-out em uma reserva com status {reserva.Status.Descricao().ToLower()}.");
+
+            reserva.Quarto.Desocupar();
+            reserva.Concluir();
 
             return reserva;
         }
