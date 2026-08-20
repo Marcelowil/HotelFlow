@@ -47,6 +47,14 @@ namespace HotelFlow.Application.Services
             return reservas.Where(reserva => reserva.Status == status).ToList();
         }
 
+        public IReadOnlyList<Reserva> ObterReservasPorPeriodo(DateTime dataInicio, DateTime dataFim)
+        {
+            if (dataInicio >= dataFim)
+                throw new ReservaException("A data de início tem que menor que da data final");
+
+            return reservas.Where(reserva => dataFim >= reserva.DataEntrada && dataInicio <= reserva.DataSaida).ToList();
+        }
+
         public Reserva RealizarPagamento(Guid id, decimal valor, DateTime dataPagamento, FormaPagamento formaPagamento)
         {
             Reserva reserva = BuscarReservaPorId(id);
