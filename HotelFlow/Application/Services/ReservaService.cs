@@ -60,6 +60,11 @@ namespace HotelFlow.Application.Services
             return reservas.Where(reserva => reserva.Hospede.Id == hospedeId).ToList();
         }
 
+        public IReadOnlyList<Reserva> ObterReservasPorQuarto(int numeroQuarto)
+        {
+            return reservas.Where(reserva => reserva.Quarto.Numero == numeroQuarto).ToList();
+        }
+
         public Reserva RealizarPagamento(Guid id, decimal valor, DateTime dataPagamento, FormaPagamento formaPagamento)
         {
             Reserva reserva = BuscarReservaPorId(id);
