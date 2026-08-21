@@ -1,18 +1,22 @@
 ﻿using HotelFlow.Domain.Entities;
 using HotelFlow.Domain.Enums;
 using HotelFlow.Domain.Exceptions;
+using HotelFlow.Infrastructure.Repositories;
 
 namespace HotelFlow.Application.Services
 {
     public class ReservaService
     {
-        private List<Reserva> reservas = new List<Reserva>();
+        private ReservaRepository repository;
+
+        public ReservaService()
+        {
+            repository = new ReservaRepository();
+        }
 
         public bool VerificarDisponibilidade(Quarto quarto, DateTime dataEntrada, DateTime dataSaida)
         {
-            List<Reserva> reservasPorQuarto = reservas
-                .Where(reserva => reserva.Quarto.Numero == quarto.Numero && !new[] { StatusReserva.Cancelada, StatusReserva.Concluida }.Contains(reserva.Status))
-                .ToList();
+            IReadOnlyList<Reserva> reservasPorQuarto = repository.BuscarReservasPorQuarto(quarto);
 
             foreach (Reserva reserva in reservasPorQuarto)
             {
@@ -32,19 +36,19 @@ namespace HotelFlow.Application.Services
             if (!VerificarDisponibilidade(quarto, dataEntrada, dataSaida))
                 throw new ReservaException("O quarto não está disponível para o período informado.");
 
-            reservas.Add(reserva);
+            repository.Salvar(reserva);
 
             return reserva;
         }
 
         public IReadOnlyList<Reserva> ObterReservas()
         {
-            return reservas;
+            return repository.BuscarTodos();
         }
 
         public IReadOnlyList<Reserva> ObterReservasPorStatus(StatusReserva status)
         {
-            return reservas.Where(reserva => reserva.Status == status).ToList();
+            return repository.BuscarReservasPorStatus(status);
         }
 
         public IReadOnlyList<Reserva> ObterReservasPorPeriodo(DateTime dataInicio, DateTime dataFim)
@@ -52,17 +56,17 @@ namespace HotelFlow.Application.Services
             if (dataInicio >= dataFim)
                 throw new ReservaException("A data de início tem que menor que da data final");
 
-            return reservas.Where(reserva => dataFim >= reserva.DataEntrada && dataInicio <= reserva.DataSaida).ToList();
+            return repository.BuscarReservasPorPeriodo(dataInicio, dataFim);
         }
 
         public IReadOnlyList<Reserva> ObterReservasPorHospede(Guid hospedeId)
         {
-            return reservas.Where(reserva => reserva.Hospede.Id == hospedeId).ToList();
+            return repository.BuscarReservasPorHospede(hospedeId);
         }
 
-        public IReadOnlyList<Reserva> ObterReservasPorQuarto(int numeroQuarto)
+        public IReadOnlyList<Reserva> ObterReservasPorNumeroQuarto(int numeroQuarto)
         {
-            return reservas.Where(reserva => reserva.Quarto.Numero == numeroQuarto).ToList();
+            return repository.BuscarReservasPorNumeroQuarto(numeroQuarto);
         }
 
         public Reserva RealizarPagamento(Guid id, decimal valor, DateTime dataPagamento, FormaPagamento formaPagamento)
@@ -137,8 +141,7 @@ namespace HotelFlow.Application.Services
 
         private Reserva BuscarReservaPorId(Guid id)
         {
-            return reservas.FirstOrDefault(reserva => reserva.Id.Equals(id))
-                ?? throw new ReservaException($"Reserva com ID {id} não encontrada.");
+            return repository.BuscarPorId(id);
         }
     }
 }

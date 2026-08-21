@@ -1,12 +1,17 @@
 ﻿using HotelFlow.Domain.Entities;
 using HotelFlow.Domain.Enums;
 using HotelFlow.Domain.Exceptions;
+using HotelFlow.Infrastructure.Repositories;
 namespace HotelFlow.Application.Services
 {
     public class QuartoService
     {
-        private List<Quarto> quartos = new List<Quarto>();
-        private List<int> numerosQuarto = new List<int>();
+        private QuartoRepository repository;
+
+        public QuartoService()
+        {
+            repository = new QuartoRepository();
+        }
 
         public Quarto CadastrarQuarto(int numero, CategoriaQuarto categoria, int capacidade, decimal valorDiaria)
         {
@@ -14,20 +19,19 @@ namespace HotelFlow.Application.Services
 
             Quarto quarto = Quarto.Cadastrar(numero, categoria, capacidade, valorDiaria);
 
-            quartos.Add(quarto);
-            numerosQuarto.Add(numero);
+            repository.Salvar(quarto);
 
             return quarto;
         }
 
         public IReadOnlyList<Quarto> ObterQuartos()
         {
-            return quartos;
+            return repository.BuscarTodos();
         }
 
         private void ChecarNumeroCadastrado(int numero)
         {
-            if (numerosQuarto.Contains(numero))
+            if (repository.VerificarNumeroDuplicado(numero))
                 throw new QuartoException($"Já existe um quarto com número {numero}.");
         }
     }
